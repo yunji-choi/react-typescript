@@ -64,17 +64,6 @@ interface ICoin {
 }
 
 function Coins() {
-  /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://api.coinpaprika.com/v1/coins");
-      const json = await response.json();
-      setCoins(json.slice(0, 100));
-      setLoading(false);
-    })();
-  }, []); */
-
   // hook - react-query의 useQuery 훅.
   //   페이지 다시 되돌아와도 다시 fetch 안함.(캐싱!!!) &  위 주석처리된 코드 모두 대체. 매우편리.
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
