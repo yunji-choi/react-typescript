@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../api";
 
 const Container = styled.div`
   padding: 0px 10px;
@@ -51,7 +53,7 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
-interface CoinInterface {
+interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -62,7 +64,7 @@ interface CoinInterface {
 }
 
 function Coins() {
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
+  /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
@@ -71,18 +73,22 @@ function Coins() {
       setCoins(json.slice(0, 100));
       setLoading(false);
     })();
-  }, []);
+  }, []); */
+
+  // hook - react-query의 useQuery 훅.
+  //   페이지 다시 되돌아와도 다시 fetch 안함.(캐싱!!!) &  위 주석처리된 코드 모두 대체. 매우편리.
+  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
   return (
     <Container>
       <Header>
         <Title>Coins</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <CoinsList>
-          {coins.map((coin) => (
+          {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
               <Link
                 to={{
