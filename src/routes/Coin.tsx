@@ -25,7 +25,7 @@ const Title = styled.h1`
 
 const Loader = styled.span`
   text-align: center;
-  /* display: block; */
+  display: block;
 `;
 const CoinsList = styled.ul``;
 
@@ -90,6 +90,33 @@ interface PriceInfoData {
   };
 }
 
+const Overview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: black;
+  padding: 20px 30px;
+  border-radius: 10px;
+`;
+
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+
+  span:first-child {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 5px;
+  }
+`;
+
+const Description = styled.p`
+  margin: 20px 0px;
+  font-size: 20px;
+`;
+
 function Coin() {
   const { coinId } = useParams<RouteParams>(); // url 파라미터.
   const { state } = useLocation<RouteState>(); // 화면 간  데이터 넘기는 방법.
@@ -115,9 +142,41 @@ function Coin() {
   return (
     <Container>
       <Header>
-        <Title>{state?.name || "Loading.."}</Title>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading.." : info?.name}
+        </Title>
       </Header>
-      {loading ? <Loader>Loading...</Loader> : null}
+      {loading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <div>
+          <Overview>
+            <OverviewItem>
+              <span>Rank</span>
+              <span>{info?.rank}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Symbol</span>
+              <span>{info?.symbol}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Open Source</span>
+              <span>{info?.open_source ? "Yes" : "No"}</span>
+            </OverviewItem>
+          </Overview>
+          <Description>{info?.description}</Description>
+          <Overview>
+            <OverviewItem>
+              <span>Total Supply</span>
+              <span>{priceInfo?.total_supply}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Max Supply</span>
+              <span>{priceInfo?.max_supply}</span>
+            </OverviewItem>
+          </Overview>
+        </div>
+      )}
     </Container>
   );
 }
