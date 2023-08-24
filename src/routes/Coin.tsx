@@ -25,7 +25,7 @@ const Title = styled.h1`
 
 const Loader = styled.span`
   text-align: center;
-  display: block;
+  /* display: block; */
 `;
 const CoinsList = styled.ul``;
 
