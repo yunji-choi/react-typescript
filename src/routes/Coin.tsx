@@ -134,7 +134,7 @@ const Tabs = styled.div`
 
 const Tab = styled.span<{ isactive: boolean }>`
   text-transform: uppercase;
-  background-color: black;
+  background-color: ${(props) => (props.isactive ? "#202020" : "#000000")};
   border-radius: 10px;
   text-align: center;
   color: ${(props) =>
