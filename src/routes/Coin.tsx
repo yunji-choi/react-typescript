@@ -12,6 +12,7 @@ import Chart from "./Chart";
 import Price from "./Price";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet";
 
 interface RouteParams {
   coinId: string;
@@ -154,19 +155,31 @@ function Coin() {
   const chartMatch = useRouteMatch("/:coinId/chart"); //     특정 url에 있는지 알려주는 훅.
 
   // useQuery는 unique key 가지고 있어야 함. => 키에 각각 "info", "tickers"를 추가해주고 어레이로 만듦.
-  //     isLoading, data의 이름을 아래처럼 해서 이름을 각각 바꾸어 줌.
+  //     isLoading, data의 이름을 아래처럼 해서 이름을 각각 바꾸어 줌.(js 문법.)
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ["info", coinId],
-    () => fetchCoinInfo(coinId)
+    () => fetchCoinInfo(coinId),
+    {
+      refetchInterval: 10000,
+    }
   );
   const { isLoading: tickersLoading, data: tickersData } =
-    useQuery<PriceInfoData>(["tickers", coinId], () =>
-      fetchCoinTickers(coinId)
+    useQuery<PriceInfoData>(
+      ["tickers", coinId],
+      () => fetchCoinTickers(coinId),
+      {
+        refetchInterval: 10000,
+      }
     );
   const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading.." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading.." : infoData?.name}
@@ -187,7 +200,7 @@ function Coin() {
             </OverviewItem>
             <OverviewItem>
               <span>Open Source</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>{tickersData?.quotes.USD.price}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -197,8 +210,8 @@ function Coin() {
               <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Price</span>
-              <span>{tickersData?.quotes.USD?.price.toFixed(1)} USD</span>
+              <span>Max Supply</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
@@ -217,7 +230,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path={`/${coinId}/chart`}>
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </div>

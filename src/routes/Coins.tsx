@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 10px;
@@ -68,8 +69,12 @@ function Coins() {
   //   페이지 다시 되돌아와도 다시 fetch 안함.(캐싱!!!) &  위 주석처리된 코드 모두 대체. 매우편리.
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
+  //헬멧은 나중에 헤드(헤더아님) 에 추가된다. => title이 바낌
   return (
     <Container>
+      <Helmet>
+        <title>Coins</title>
+      </Helmet>
       <Header>
         <Title>Coins</Title>
       </Header>
