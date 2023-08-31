@@ -1,6 +1,8 @@
-import { createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { useRecoilState } from "recoil";
+import { themeState } from ".";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -19,6 +21,8 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 main, menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
+  color: ${(props) => props.theme.fontColor};
+  /* background-color: ${(props) => props.theme.bgColor}; */
   margin: 0;
   padding: 0;
   border: 0;
@@ -37,6 +41,7 @@ footer, header, hgroup, main, menu, nav, section {
 }
 body {
   line-height: 1;
+  background-color: ${(props) => props.theme.bgColor};;
 }
 menu, ol, ul {
   list-style: none;
@@ -58,22 +63,26 @@ table {
 }
 body{
   font-family: 'Bricolage Grotesque', sans-serif;
-background-color: ${(props) => props.theme.bgColor};
+/* /* background-color: ${(props) => props.theme.bgColor}; */
 color: ${(props) => props.theme.textColor};
 }
 a{
   text-decoration: none;
   color:inherit;
 }
+h1{
+  font-weight: 600;
+}
 `;
 
 function App() {
+  const [theme, setTheme] = useRecoilState(themeState);
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Router />
       <ReactQueryDevtools initialIsOpen={true} />
-    </>
+    </ThemeProvider>
   );
 }
 

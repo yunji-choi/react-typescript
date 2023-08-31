@@ -1,6 +1,9 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useRecoilState } from "recoil";
+import { themeState } from "..";
+import { lightTheme } from "../theme";
 
 interface IChartProps {
   coinId: string;
@@ -18,52 +21,41 @@ interface IHistoricalData {
 }
 
 function Chart({ coinId }: IChartProps) {
+  const [theme, setTheme] = useRecoilState(themeState);
   const { isLoading, data } = useQuery<IHistoricalData[]>(
     ["ohlcv", coinId],
-    () => fetchCoinHistory(coinId),
-    { refetchInterval: 10000 } //세 번째 argument로, refetch interval을 설정할 수 있다.
+    () => fetchCoinHistory(coinId)
+    // { refetchInterval: 10000 } //세 번째 argument로, refetch interval을 설정할 수 있다.
   );
+
   return (
     <div>
       {isLoading ? (
         "Loading chart..."
-      ) : (
+      ) : data?.length ? (
         <ApexChart
-          type="line"
+          type="candlestick"
           series={[
             {
-              name: `${coinId}`,
-              data: data?.map((price) => parseFloat(price.close)) ?? [],
+              data:
+                data?.map((p) => ({
+                  x: p.time_close * 1000,
+                  y: [p.open, p.high, p.low, p.close],
+                })) ?? [],
             },
           ]}
           options={{
-            theme: { mode: "dark" },
-            chart: { height: 500, width: 500, toolbar: { show: false } },
-            stroke: {
-              curve: "smooth",
-              width: 3,
-            },
-            fill: {
-              type: "gradient",
-              gradient: { gradientToColors: ["purple"], stops: [0, 100] },
-            },
-            colors: ["pink"],
-            // yaxis: { show: false },
             xaxis: {
-              categories: data?.map((price) => price.time_close * 1000) ?? [],
               type: "datetime",
               labels: { datetimeFormatter: { month: "mmm 'yy" } },
             },
-            tooltip: {
-              x: {
-                format: "dd/MM/yy HH:mm",
-              },
-              y: {
-                formatter: (v) => `$ ${v.toFixed(2)}`,
-              },
+            theme: {
+              mode: theme === lightTheme ? "light" : "dark",
             },
           }}
-        />
+        ></ApexChart>
+      ) : (
+        <h1>No data</h1>
       )}
     </div>
   );
