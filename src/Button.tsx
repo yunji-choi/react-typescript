@@ -14,7 +14,8 @@ const Button = styled.div`
     color: ${(props) => props.theme.textColor};
     border-radius: 10px;
     /* width: 100px; */
-    margin-top: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     padding: 10px 10px;
   }
 `;

@@ -12,7 +12,7 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const Header = styled.header`
+const Header = styled.div`
   height: 15vh;
   display: flex;
   justify-content: center;
@@ -76,10 +76,11 @@ function Coins() {
       <Helmet>
         <title>Coins</title>
       </Helmet>
+      <ThemeButton />
       <Header>
         <Title>Coins</Title>
-        <ThemeButton />
       </Header>
+
       {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
