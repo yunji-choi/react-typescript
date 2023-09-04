@@ -1,8 +1,9 @@
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { useRecoilState } from "recoil";
-import { themeState } from ".";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms";
+import { darkTheme, lightTheme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -76,9 +77,9 @@ h1{
 `;
 
 function App() {
-  const [theme, setTheme] = useRecoilState(themeState);
+  const theme = useRecoilValue(isDarkAtom);
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme ? darkTheme : lightTheme}>
       <GlobalStyle />
       <Router />
       <ReactQueryDevtools initialIsOpen={true} />

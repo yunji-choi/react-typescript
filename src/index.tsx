@@ -12,11 +12,6 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-export const themeState = atom({
-  key: "themeState",
-  default: lightTheme,
-});
-
 root.render(
   <React.StrictMode>
     <RecoilRoot>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet";
+import { ThemeButton } from "../Button";
 
 const Container = styled.div`
   padding: 0px 10px;
@@ -77,6 +78,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <ThemeButton />
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

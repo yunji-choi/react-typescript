@@ -16,23 +16,9 @@ import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "../theme";
-import { useRecoilState } from "recoil";
-import { themeState } from "..";
-
-const Button = styled.div`
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  div {
-    display: inline-block;
-    background-color: ${(props) => props.theme.cardColor};
-    color: ${(props) => props.theme.textColor};
-    border-radius: 10px;
-    /* width: 100px; */
-    margin-top: 30px;
-    padding: 10px 10px;
-  }
-`;
+import { useRecoilState, useRecoilValue } from "recoil";
+import { HomeButton, ThemeButton } from "../Button";
+import { isDarkAtom } from "../atoms";
 
 interface RouteParams {
   coinId: string;
@@ -172,7 +158,7 @@ const Tab = styled.span<{ isactive: boolean }>`
 `;
 
 function Coin() {
-  const [theme, setTheme] = useRecoilState(themeState);
+  const isDark = useRecoilValue(isDarkAtom);
 
   const { coinId } = useParams<RouteParams>(); // url 파라미터.
   const { state } = useLocation<RouteState>(); // 화면 간  데이터 넘기는 방법.
@@ -200,7 +186,7 @@ function Coin() {
   console.log(infoData);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <Container>
         <Helmet>
           <title>
@@ -208,21 +194,8 @@ function Coin() {
           </title>
         </Helmet>
 
-        <Button>
-          <Link to="/">
-            <div>Back</div>
-          </Link>
-        </Button>
-
-        <Button>
-          <span
-            onClick={() => {
-              setTheme((prev) => (prev === darkTheme ? lightTheme : darkTheme));
-            }}
-          >
-            <div>Change Mode</div>
-          </span>
-        </Button>
+        <HomeButton />
+        <ThemeButton />
 
         <Header>
           <Title>

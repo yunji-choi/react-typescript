@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
-import { useRecoilState } from "recoil";
-import { themeState } from "..";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { lightTheme } from "../theme";
+import { isDarkAtom } from "../atoms";
 
 interface IChartProps {
   coinId: string;
@@ -21,7 +21,7 @@ interface IHistoricalData {
 }
 
 function Chart({ coinId }: IChartProps) {
-  const [theme, setTheme] = useRecoilState(themeState);
+  const isDark = useRecoilValue(isDarkAtom);
   const { isLoading, data } = useQuery<IHistoricalData[]>(
     ["ohlcv", coinId],
     () => fetchCoinHistory(coinId)
@@ -50,7 +50,7 @@ function Chart({ coinId }: IChartProps) {
               labels: { datetimeFormatter: { month: "mmm 'yy" } },
             },
             theme: {
-              mode: theme === lightTheme ? "light" : "dark",
+              mode: isDark ? "dark" : "light",
             },
           }}
         ></ApexChart>
